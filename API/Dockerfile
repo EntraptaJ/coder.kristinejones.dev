@@ -13,6 +13,7 @@ RUN npm ci --prod
 
 FROM alpine:3.10
 ENV NODE_ENV=production
+RUN apk add git
 COPY --from=1 /app/node_modules/ /app/node_modules/
 COPY --from=1 /usr/bin/node /usr/bin/
 COPY --from=1 /usr/lib/node_modules/ /usr/lib/node_modules/
