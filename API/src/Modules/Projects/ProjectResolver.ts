@@ -76,7 +76,7 @@ export class ProjectResolver {
       Image:
         'docker.pkg.github.com/kristianfjones/docker-images/vs-code-alpine',
       HostConfig: {
-        NetworkMode: 'coder_default',
+        NetworkMode: 'kristianjones_default',
       },
     });
 
