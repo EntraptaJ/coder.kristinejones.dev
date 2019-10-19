@@ -21,28 +21,8 @@ export const AppRoutes: AppRoute[] = [
     },
   },
   {
-    path: 'Test',
-    label: 'Test',
-    imported: {
-      imported: import('UI/Routes/Test'),
-      path: 'Routes/Test/index.tsx',
-    },
-  },
-  {
-    path: 'Example',
-    label: 'Example',
-    imported: {
-      imported: import('UI/Routes/Example'),
-      path: 'Routes/Example/index.tsx',
-    },
-  },
-  {
-    path: 'Lab',
-    label: 'Lab',
-    imported: {
-      imported: import('UI/Routes/Lab'),
-      path: 'Routes/Lab/index.tsx',
-    },
+    path: 'Projects',
+    label: 'Projects',
   },
   {
     path: 'Login',

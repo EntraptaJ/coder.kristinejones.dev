@@ -12,6 +12,7 @@ import {
   UniqueUsernameConstraint,
   UniqueEmailConstraint,
 } from '../Auth/AuthValidator';
+import { Project } from '../Projects/ProjectModel';
 
 @ObjectType()
 @Entity()
@@ -57,5 +58,9 @@ export class User extends BaseEntity {
 
   async setPassword(plainText: string): Promise<void> {
     this.hashedPassword = await hashPassword(plainText);
+  }
+
+  get projects(): Promise<Project[]> {
+    return Project.getUserProjects(this);
   }
 }

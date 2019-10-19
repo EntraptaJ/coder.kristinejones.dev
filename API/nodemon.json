@@ -1,6 +1,7 @@
 {
-  "watch": ["src"],
+  "watch": ["src/**"],
   "ext": "ts",
   "ignore": ["src/**/*.test.ts"],
-  "exec": "node -r ts-node/register ./src/index.ts"
+  "exec": "node -r ts-node/register ./src/index.ts",
+  "legacyWatch": true
 }

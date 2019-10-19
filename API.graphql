@@ -21,7 +21,13 @@ type CurrentUser {
   username: String!
   email: String!
   roles: [UserRole!]!
+  projects: [Project!]!
 }
+
+"""
+The javascript `Date` as string. Type represents date and time as the ISO Date string.
+"""
+scalar DateTime
 
 input LoginInput {
   username: String!
@@ -33,12 +39,35 @@ type Mutation {
   register(input: UserInput!): RegisterResponse!
   resetPasswordReset(input: RequestPasswordResetInput!): Boolean!
   initialConfiguration(user: UserInput!): Configuration!
+  createProject(input: ProjectInput!): CurrentUser!
+  codeProject(projectId: String!): String!
   createUtility(input: CreateUtilityInput!): Utility!
+}
+
+type Project {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  name: String!
+  gitUrl: String!
+  activeHostname: String
+}
+
+input ProjectAuthInput {
+  username: String!
+  password: String!
+}
+
+input ProjectInput {
+  name: String!
+  gitUrl: String!
+  auth: ProjectAuthInput!
 }
 
 type Query {
   currentUser: CurrentUser
   hasSetup: Boolean!
+  project(projectId: String!): [Project!]!
   users: [User!]!
   user(userId: String!): User!
   utilities: [Utility!]!

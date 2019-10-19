@@ -1,3 +1,4 @@
 FROM mhart/alpine-node:latest
 WORKDIR /development
+RUN apk add git
 CMD npm run dev
