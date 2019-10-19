@@ -31,7 +31,7 @@ type ChangeHandler<A> = <T extends keyof A>(
 export default function ProjectRoute(): React.ReactElement {
   const { projectId } = useParams<ProjectRouteParams>();
 
-  const { data, error } = useProjectQuery({ variables: { projectId } });
+  const { data } = useProjectQuery({ variables: { projectId } });
 
   const [
     startCodingSession,
