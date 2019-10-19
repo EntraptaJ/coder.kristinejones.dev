@@ -1,3 +1,7 @@
+{
+  experimental_http3
+}
+
 https://code.kristianjones.dev:443 {
   tls /SSL/kristianjones.dev.pem /SSL/kristianjones.dev.key
   reverse_proxy /graphql api:80
