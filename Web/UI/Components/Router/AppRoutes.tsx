@@ -23,6 +23,20 @@ export const AppRoutes: AppRoute[] = [
   {
     path: 'Projects',
     label: 'Projects',
+    imported: {
+      imported: import('UI/Routes/Projects/Projects'),
+      path: 'Routes/Projects/Projects.tsx',
+    },
+    children: [
+      {
+        path: ':projectId',
+        label: 'Project',
+        imported: {
+          imported: import('UI/Routes/Projects/Project'),
+          path: 'Routes/Projects/Project.tsx',
+        },
+      },
+    ],
   },
   {
     path: 'Login',

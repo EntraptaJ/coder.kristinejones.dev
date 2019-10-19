@@ -22,6 +22,7 @@ import { ProjectPermission } from './ProjectPermissionModel';
 import { User } from '../Users/UserModel';
 import { Permission } from '../Permissions/Permission';
 import { ProjectAuth } from './ProjectAuthModel';
+import { CodeSession } from '../CodeSessions/CodeSessionModel';
 
 @ObjectType()
 @Entity()
@@ -42,21 +43,29 @@ export class Project extends BaseEntity {
   @Column('varchar')
   name: string;
 
+  @Field(() => ProjectAuth, { nullable: true })
   @OneToOne(() => ProjectAuth, (projectAuth) => projectAuth.project, {
-    cascade: ['insert'],
+    cascade: ['insert', 'update'],
+    nullable: true,
   })
   @JoinColumn()
-  projectAuth: ProjectAuth;
-  @Column()
-  projectAuthId: string;
+  projectAuth?: ProjectAuth;
+  @Column({ nullable: true })
+  projectAuthId?: string;
 
   @Field()
   @Column('varchar')
   gitUrl: string;
 
-  @Field({ nullable: true })
-  @Column('varchar', { nullable: true })
-  activeHostname: string;
+  @Field(() => CodeSession, { nullable: true })
+  @OneToOne(() => CodeSession, (codeSession) => codeSession.project, {
+    cascade: ['insert', 'remove'],
+    nullable: true,
+  })
+  @JoinColumn()
+  codeSession?: CodeSession | null;
+  @Column({ nullable: true })
+  codeSessionId?: string;
 
   @OneToMany(
     () => ProjectPermission,

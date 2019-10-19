@@ -1,0 +1,11 @@
+mutation FinishCodingSession($projectId: String!) {
+  finishCodingSession(projectId: $projectId) {
+    id
+    name
+    gitUrl
+    codeSession {
+      id
+      containerId
+    }
+  }
+}

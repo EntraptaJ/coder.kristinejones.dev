@@ -8,6 +8,13 @@ type AuthResponse {
   currentUser: CurrentUser!
 }
 
+type CodeSession {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  containerId: String!
+}
+
 type Configuration {
   id: ID!
 }
@@ -38,9 +45,11 @@ type Mutation {
   login(input: LoginInput!): AuthResponse!
   register(input: UserInput!): RegisterResponse!
   resetPasswordReset(input: RequestPasswordResetInput!): Boolean!
+  startCodingSession(projectId: String!): Project!
+  finishCodingSession(projectId: String!): Project!
   initialConfiguration(user: UserInput!): Configuration!
   createProject(input: ProjectInput!): CurrentUser!
-  codeProject(projectId: String!): String!
+  updateProject(input: UpdateProjectInput!, projectId: String!): Project!
   createUtility(input: CreateUtilityInput!): Utility!
 }
 
@@ -49,8 +58,15 @@ type Project {
   createdAt: DateTime!
   updatedAt: DateTime!
   name: String!
+  projectAuth: ProjectAuth
   gitUrl: String!
-  activeHostname: String
+  codeSession: CodeSession
+}
+
+type ProjectAuth {
+  id: String!
+  username: String!
+  password: String!
 }
 
 input ProjectAuthInput {
@@ -61,13 +77,13 @@ input ProjectAuthInput {
 input ProjectInput {
   name: String!
   gitUrl: String!
-  auth: ProjectAuthInput!
+  auth: ProjectAuthInput
 }
 
 type Query {
   currentUser: CurrentUser
   hasSetup: Boolean!
-  project(projectId: String!): [Project!]!
+  project(projectId: String!): Project!
   users: [User!]!
   user(userId: String!): User!
   utilities: [Utility!]!
@@ -87,6 +103,16 @@ input RequestPasswordResetInput {
 input ResetPasswordInput {
   token: String!
   password: String!
+}
+
+input UpdateProjectAuthInput {
+  username: String
+  password: String
+}
+
+input UpdateProjectInput {
+  name: String
+  auth: UpdateProjectAuthInput
 }
 
 type User {

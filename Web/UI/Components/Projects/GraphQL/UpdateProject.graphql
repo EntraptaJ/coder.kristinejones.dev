@@ -1,0 +1,12 @@
+mutation UpdateProject($projectId: String!, $input: UpdateProjectInput!) {
+  updateProject(projectId: $projectId, input: $input) {
+    id
+    name
+    gitUrl
+    projectAuth {
+      id
+      username
+      password
+    }
+  }
+}

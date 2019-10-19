@@ -6,12 +6,22 @@ export type Scalars = {
   Boolean: boolean,
   Int: number,
   Float: number,
+  /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
+  DateTime: any,
 };
 
 export type AuthResponse = {
    __typename?: 'AuthResponse',
   token: Scalars['String'],
   currentUser: CurrentUser,
+};
+
+export type CodeSession = {
+   __typename?: 'CodeSession',
+  id: Scalars['ID'],
+  createdAt: Scalars['DateTime'],
+  updatedAt: Scalars['DateTime'],
+  containerId: Scalars['String'],
 };
 
 export type Configuration = {
@@ -29,7 +39,9 @@ export type CurrentUser = {
   username: Scalars['String'],
   email: Scalars['String'],
   roles: Array<UserRole>,
+  projects: Array<Project>,
 };
+
 
 export type LoginInput = {
   username: Scalars['String'],
@@ -41,7 +53,11 @@ export type Mutation = {
   login: AuthResponse,
   register: RegisterResponse,
   resetPasswordReset: Scalars['Boolean'],
+  startCodingSession: Project,
+  finishCodingSession: Project,
   initialConfiguration: Configuration,
+  createProject: CurrentUser,
+  updateProject: Project,
   createUtility: Utility,
 };
 
@@ -61,8 +77,29 @@ export type MutationResetPasswordResetArgs = {
 };
 
 
+export type MutationStartCodingSessionArgs = {
+  projectId: Scalars['String']
+};
+
+
+export type MutationFinishCodingSessionArgs = {
+  projectId: Scalars['String']
+};
+
+
 export type MutationInitialConfigurationArgs = {
   user: UserInput
+};
+
+
+export type MutationCreateProjectArgs = {
+  input: ProjectInput
+};
+
+
+export type MutationUpdateProjectArgs = {
+  input: UpdateProjectInput,
+  projectId: Scalars['String']
 };
 
 
@@ -70,14 +107,49 @@ export type MutationCreateUtilityArgs = {
   input: CreateUtilityInput
 };
 
+export type Project = {
+   __typename?: 'Project',
+  id: Scalars['ID'],
+  createdAt: Scalars['DateTime'],
+  updatedAt: Scalars['DateTime'],
+  name: Scalars['String'],
+  projectAuth?: Maybe<ProjectAuth>,
+  gitUrl: Scalars['String'],
+  codeSession?: Maybe<CodeSession>,
+};
+
+export type ProjectAuth = {
+   __typename?: 'ProjectAuth',
+  id: Scalars['String'],
+  username: Scalars['String'],
+  password: Scalars['String'],
+};
+
+export type ProjectAuthInput = {
+  username: Scalars['String'],
+  password: Scalars['String'],
+};
+
+export type ProjectInput = {
+  name: Scalars['String'],
+  gitUrl: Scalars['String'],
+  auth?: Maybe<ProjectAuthInput>,
+};
+
 export type Query = {
    __typename?: 'Query',
   currentUser?: Maybe<CurrentUser>,
   hasSetup: Scalars['Boolean'],
+  project: Project,
   users: Array<User>,
   user: User,
   utilities: Array<Utility>,
   helloWorld: Scalars['String'],
+};
+
+
+export type QueryProjectArgs = {
+  projectId: Scalars['String']
 };
 
 
@@ -99,6 +171,16 @@ export type RequestPasswordResetInput = {
 export type ResetPasswordInput = {
   token: Scalars['String'],
   password: Scalars['String'],
+};
+
+export type UpdateProjectAuthInput = {
+  username?: Maybe<Scalars['String']>,
+  password?: Maybe<Scalars['String']>,
+};
+
+export type UpdateProjectInput = {
+  name?: Maybe<Scalars['String']>,
+  auth?: Maybe<UpdateProjectAuthInput>,
 };
 
 export type User = {
@@ -124,6 +206,110 @@ export type Utility = {
   id: Scalars['ID'],
   name: Scalars['String'],
 };
+export type CreateProjectMutationVariables = {
+  input: ProjectInput
+};
+
+
+export type CreateProjectMutation = (
+  { __typename?: 'Mutation' }
+  & { createProject: (
+    { __typename?: 'CurrentUser' }
+    & Pick<CurrentUser, 'id' | 'username'>
+    & { projects: Array<(
+      { __typename?: 'Project' }
+      & Pick<Project, 'id' | 'name' | 'gitUrl'>
+    )> }
+  ) }
+);
+
+export type FinishCodingSessionMutationVariables = {
+  projectId: Scalars['String']
+};
+
+
+export type FinishCodingSessionMutation = (
+  { __typename?: 'Mutation' }
+  & { finishCodingSession: (
+    { __typename?: 'Project' }
+    & Pick<Project, 'id' | 'name' | 'gitUrl'>
+    & { codeSession: Maybe<(
+      { __typename?: 'CodeSession' }
+      & Pick<CodeSession, 'id' | 'containerId'>
+    )> }
+  ) }
+);
+
+export type ProjectQueryVariables = {
+  projectId: Scalars['String']
+};
+
+
+export type ProjectQuery = (
+  { __typename?: 'Query' }
+  & { project: (
+    { __typename?: 'Project' }
+    & Pick<Project, 'id' | 'name' | 'gitUrl'>
+    & { projectAuth: Maybe<(
+      { __typename?: 'ProjectAuth' }
+      & Pick<ProjectAuth, 'id' | 'username' | 'password'>
+    )>, codeSession: Maybe<(
+      { __typename?: 'CodeSession' }
+      & Pick<CodeSession, 'id' | 'containerId'>
+    )> }
+  ) }
+);
+
+export type ProjectsQueryVariables = {};
+
+
+export type ProjectsQuery = (
+  { __typename?: 'Query' }
+  & { currentUser: Maybe<(
+    { __typename?: 'CurrentUser' }
+    & Pick<CurrentUser, 'id' | 'username'>
+    & { projects: Array<(
+      { __typename?: 'Project' }
+      & Pick<Project, 'id' | 'name' | 'gitUrl'>
+    )> }
+  )> }
+);
+
+export type StartCodingSessionMutationVariables = {
+  projectId: Scalars['String']
+};
+
+
+export type StartCodingSessionMutation = (
+  { __typename?: 'Mutation' }
+  & { startCodingSession: (
+    { __typename?: 'Project' }
+    & Pick<Project, 'id' | 'gitUrl'>
+    & { codeSession: Maybe<(
+      { __typename?: 'CodeSession' }
+      & Pick<CodeSession, 'id' | 'containerId'>
+    )> }
+  ) }
+);
+
+export type UpdateProjectMutationVariables = {
+  projectId: Scalars['String'],
+  input: UpdateProjectInput
+};
+
+
+export type UpdateProjectMutation = (
+  { __typename?: 'Mutation' }
+  & { updateProject: (
+    { __typename?: 'Project' }
+    & Pick<Project, 'id' | 'name' | 'gitUrl'>
+    & { projectAuth: Maybe<(
+      { __typename?: 'ProjectAuth' }
+      & Pick<ProjectAuth, 'id' | 'username' | 'password'>
+    )> }
+  ) }
+);
+
 export type CurrentUserFragment = (
   { __typename?: 'CurrentUser' }
   & Pick<CurrentUser, 'username' | 'id' | 'roles'>

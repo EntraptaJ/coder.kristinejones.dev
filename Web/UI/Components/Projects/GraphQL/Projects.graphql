@@ -1,0 +1,11 @@
+query Projects {
+  currentUser {
+    id
+    username
+    projects {
+      id
+      name
+      gitUrl
+    }
+  }
+}

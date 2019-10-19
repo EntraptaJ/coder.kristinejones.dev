@@ -10,6 +10,6 @@ export class ProjectInput {
   @Field()
   gitUrl: string;
 
-  @Field(() => ProjectAuthInput)
-  auth: ProjectAuthInput;
+  @Field(() => ProjectAuthInput, { nullable: true })
+  auth?: ProjectAuthInput;
 }

@@ -1,0 +1,10 @@
+mutation StartCodingSession($projectId: String!) {
+  startCodingSession(projectId: $projectId) {
+    id
+    gitUrl
+    codeSession {
+      id
+      containerId
+    }
+  }
+}

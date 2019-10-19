@@ -1,0 +1,16 @@
+query Project($projectId: String!) {
+  project(projectId: $projectId) {
+    id
+    name
+    gitUrl
+    projectAuth {
+      id
+      username
+      password
+    }
+    codeSession {
+      id
+      containerId
+    }
+  }
+}

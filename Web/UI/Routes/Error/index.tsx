@@ -10,7 +10,6 @@ export default function ErrorRoute(props: ErrorRouteProps): React.ReactElement {
   return (
     <>
       <h1>Error</h1>
-      <h2>{props.code.toString()}</h2>
     </>
   );
 }

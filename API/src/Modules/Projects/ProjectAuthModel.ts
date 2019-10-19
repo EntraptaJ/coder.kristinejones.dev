@@ -9,9 +9,12 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Project } from './ProjectModel';
+import { Field, ObjectType } from 'type-graphql';
 
+@ObjectType()
 @Entity()
 export class ProjectAuth extends BaseEntity {
+  @Field()
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -24,9 +27,11 @@ export class ProjectAuth extends BaseEntity {
   @OneToOne(() => Project, (project) => project.projectAuth)
   project: Project;
 
+  @Field()
   @Column('text')
   username: string;
 
+  @Field()
   @Column('text')
   password: string;
 }
