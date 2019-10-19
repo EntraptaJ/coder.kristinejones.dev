@@ -113,7 +113,7 @@ export default function ProjectRoute(): React.ReactElement {
           <a
             href={`https://${oc(
               data,
-            ).project.codeSession.containerId()}.coder.kristianjones.dev`}
+            ).project.codeSession.containerId()}.code.kristianjones.dev`}
           >
             Session
           </a>
