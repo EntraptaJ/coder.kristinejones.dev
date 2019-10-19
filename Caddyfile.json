@@ -1,0 +1,141 @@
+{
+  "apps": {
+    "http": {
+      "servers": {
+        "coder": {
+          "listen": [":443"],
+          "routes": [
+            {
+              "match": [
+                {
+                  "host": ["coder.kristianjones.dev"]
+                }
+              ],
+              "handle": [
+                {
+                  "handler": "subroute",
+                  "routes": [
+                    {
+                      "handle": [
+                        {
+                          "handler": "vars",
+                          "root": "/var/www/html"
+                        },
+                        {
+                          "handler": "subroute",
+                          "routes": [
+                            {
+                              "handle": [
+                                {
+                                  "handler": "headers",
+                                  "response": {
+                                    "add": {
+                                      "Alt-Svc": ["h3-23=\":443\"; sma=86400"]
+                                    },
+                                    "deferred": true
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "handle": [
+                                {
+                                  "handler": "reverse_proxy",
+                                  "upstreams": [
+                                    {
+                                      "dial": "api:80"
+                                    }
+                                  ]
+                                }
+                              ],
+                              "match": [
+                                {
+                                  "path": ["/graphql"]
+                                }
+                              ]
+                            },
+                            {
+                              "handle": [
+                                {
+                                  "handler": "reverse_proxy",
+                                  "upstreams": [
+                                    {
+                                      "dial": "192.168.2.18:81"
+                                    }
+                                  ]
+                                }
+                              ],
+                              "match": [
+                                {
+                                  "path": ["/"]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "match": [
+                {
+                  "host": ["*.coder.kristianjones.dev"]
+                }
+              ],
+              "handle": [
+                {
+                  "handler": "encode",
+                  "encodings": {
+                    "brotli": { "quality": 6 },
+                    "gzip": { "level": 5 },
+                    "zstd": {}
+                  },
+                  "minimum_length": 512
+                },
+                {
+                  "handler": "subroute",
+                  "routes": [
+                    {
+                      "handle": [
+                        {
+                          "handler": "reverse_proxy",
+                          "transport": {
+                            "protocol": "http",
+                            "compression": true
+                          },
+                          "upstreams": [
+                            {
+                              "dial": "{http.request.host.labels.0}:8080"
+                            }
+                          ]
+                        }
+                      ],
+                      "match": [
+                        {
+                          "path": ["/"]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "tls": {
+      "certificates": {
+        "load_files": [
+          {
+            "certificate": "/SSL/kristianjones.dev.pem",
+            "key": "/SSL/kristianjones.dev.key"
+          }
+        ]
+      }
+    }
+  }
+}

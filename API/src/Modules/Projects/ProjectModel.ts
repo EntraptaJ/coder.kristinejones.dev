@@ -59,8 +59,9 @@ export class Project extends BaseEntity {
 
   @Field(() => CodeSession, { nullable: true })
   @OneToOne(() => CodeSession, (codeSession) => codeSession.project, {
-    cascade: ['insert', 'remove'],
+    cascade: true,
     nullable: true,
+    onDelete: 'CASCADE',
   })
   @JoinColumn()
   codeSession?: CodeSession | null;

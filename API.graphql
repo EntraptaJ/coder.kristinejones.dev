@@ -13,6 +13,7 @@ type CodeSession {
   createdAt: DateTime!
   updatedAt: DateTime!
   containerId: String!
+  networkId: String!
 }
 
 type Configuration {
