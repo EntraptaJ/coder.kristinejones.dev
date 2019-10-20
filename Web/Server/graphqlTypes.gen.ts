@@ -22,6 +22,15 @@ export type CodeSession = {
   createdAt: Scalars['DateTime'],
   updatedAt: Scalars['DateTime'],
   containerId: Scalars['String'],
+  networkId: Scalars['String'],
+};
+
+export type CodeSessionDefaults = {
+   __typename?: 'CodeSessionDefaults',
+  id: Scalars['ID'],
+  createdAt: Scalars['DateTime'],
+  updatedAt: Scalars['DateTime'],
+  extensions: Array<Scalars['String']>,
 };
 
 export type Configuration = {
@@ -40,8 +49,24 @@ export type CurrentUser = {
   email: Scalars['String'],
   roles: Array<UserRole>,
   projects: Array<Project>,
+  ideas: Array<Idea>,
+  userDefaults?: Maybe<UserDefaults>,
 };
 
+
+export type Idea = {
+   __typename?: 'Idea',
+  id: Scalars['ID'],
+  createdAt: Scalars['DateTime'],
+  updatedAt: Scalars['DateTime'],
+  title: Scalars['String'],
+  body?: Maybe<Scalars['String']>,
+};
+
+export type IdeaInput = {
+  title: Scalars['String'],
+  body?: Maybe<Scalars['String']>,
+};
 
 export type LoginInput = {
   username: Scalars['String'],
@@ -56,8 +81,10 @@ export type Mutation = {
   startCodingSession: Project,
   finishCodingSession: Project,
   initialConfiguration: Configuration,
+  createIdea: CurrentUser,
   createProject: CurrentUser,
   updateProject: Project,
+  addUserDefaults: Scalars['Boolean'],
   createUtility: Utility,
 };
 
@@ -92,6 +119,11 @@ export type MutationInitialConfigurationArgs = {
 };
 
 
+export type MutationCreateIdeaArgs = {
+  input: IdeaInput
+};
+
+
 export type MutationCreateProjectArgs = {
   input: ProjectInput
 };
@@ -100,6 +132,11 @@ export type MutationCreateProjectArgs = {
 export type MutationUpdateProjectArgs = {
   input: UpdateProjectInput,
   projectId: Scalars['String']
+};
+
+
+export type MutationAddUserDefaultsArgs = {
+  extensions: Array<Scalars['String']>
 };
 
 
@@ -116,6 +153,7 @@ export type Project = {
   projectAuth?: Maybe<ProjectAuth>,
   gitUrl: Scalars['String'],
   codeSession?: Maybe<CodeSession>,
+  sessionDefaults?: Maybe<CodeSessionDefaults>,
 };
 
 export type ProjectAuth = {
@@ -140,11 +178,17 @@ export type Query = {
    __typename?: 'Query',
   currentUser?: Maybe<CurrentUser>,
   hasSetup: Scalars['Boolean'],
+  idea: Idea,
   project: Project,
   users: Array<User>,
   user: User,
   utilities: Array<Utility>,
   helloWorld: Scalars['String'],
+};
+
+
+export type QueryIdeaArgs = {
+  ideaId: Scalars['String']
 };
 
 
@@ -173,6 +217,18 @@ export type ResetPasswordInput = {
   password: Scalars['String'],
 };
 
+export type SessionDefaults = {
+   __typename?: 'SessionDefaults',
+  id: Scalars['ID'],
+  createdAt: Scalars['DateTime'],
+  updatedAt: Scalars['DateTime'],
+  extensions: Array<Scalars['String']>,
+};
+
+export type UpdateCodeSessionDefaultsInput = {
+  extensions?: Maybe<Array<Scalars['String']>>,
+};
+
 export type UpdateProjectAuthInput = {
   username?: Maybe<Scalars['String']>,
   password?: Maybe<Scalars['String']>,
@@ -181,12 +237,21 @@ export type UpdateProjectAuthInput = {
 export type UpdateProjectInput = {
   name?: Maybe<Scalars['String']>,
   auth?: Maybe<UpdateProjectAuthInput>,
+  sessionDefaults?: Maybe<UpdateCodeSessionDefaultsInput>,
 };
 
 export type User = {
    __typename?: 'User',
   id: Scalars['ID'],
   username: Scalars['String'],
+};
+
+export type UserDefaults = {
+   __typename?: 'UserDefaults',
+  id: Scalars['ID'],
+  createdAt: Scalars['DateTime'],
+  updatedAt: Scalars['DateTime'],
+  extensions: Array<Scalars['String']>,
 };
 
 export type UserInput = {

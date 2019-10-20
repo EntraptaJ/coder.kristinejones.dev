@@ -39,6 +39,14 @@ export const AppRoutes: AppRoute[] = [
     ],
   },
   {
+    path: 'Ideas',
+    label: 'Ideas',
+    imported: {
+      imported: import('UI/Routes/Ideas/Ideas'),
+      path: 'Routes/Ideas/Ideas.tsx',
+    },
+  },
+  {
     path: 'Login',
     label: 'Login',
     imported: {

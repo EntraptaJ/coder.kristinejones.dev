@@ -14,6 +14,7 @@ export const Routes: Route[] = [
   { label: 'Home', to: '/' },
   { label: 'Setup', to: '/Setup', hideUI: true, hidden: true },
   { label: 'Projects', to: '/Projects', roles: [UserRole.User] },
+  { label: 'Ideas', to: '/Ideas', roles: [UserRole.User] },
   { label: 'Login', to: '/Login', roles: [UserRole.Guest] },
   { label: 'Register', to: '/Register', roles: [UserRole.Guest] },
   {

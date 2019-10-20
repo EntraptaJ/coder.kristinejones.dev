@@ -1,0 +1,10 @@
+query Ideas {
+  currentUser {
+    id
+    ideas {
+      id
+      title
+      body
+    }
+  }
+}
