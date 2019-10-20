@@ -2,7 +2,7 @@
 import React, { useCallback } from 'react';
 import MaterialTable from 'material-table';
 import { useProjectsQuery } from '../GraphQL/Projects.gen';
-import { Project, ProjectInput } from 'UI/GraphQL/graphqlTypes.gen';
+import { Project } from 'UI/GraphQL/graphqlTypes.gen';
 import { useCreateProjectMutation } from '../GraphQL/CreateProject.gen';
 import { useSnackbar } from 'notistack';
 import { useHistory } from 'react-router';
@@ -27,12 +27,12 @@ export function ProjectsTable(): React.ReactElement {
   );
 
   const handleAddProject = useCallback(
-    async (input: ProjectInput) => {
+    async (input: ProjectData) => {
       const response = await createProject({ variables: { input } });
       if (response.data && response.data.createProject)
         enqueueSnackbar('Project added successfully', { variant: 'success' });
     },
-    [enqueueSnackbar],
+    [enqueueSnackbar, createProject],
   );
 
   return (
