@@ -13,6 +13,7 @@ import {
   UniqueEmailConstraint,
 } from '../Auth/AuthValidator';
 import { Project } from '../Projects/ProjectModel';
+import { Idea } from '../Ideas/IdeasModel';
 
 @ObjectType()
 @Entity()
@@ -62,5 +63,9 @@ export class User extends BaseEntity {
 
   get projects(): Promise<Project[]> {
     return Project.getUserProjects(this);
+  }
+
+  get ideas(): Promise<Idea[]> {
+    return Idea.find({ userId: this.id })
   }
 }

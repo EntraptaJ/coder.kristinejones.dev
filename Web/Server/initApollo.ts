@@ -13,7 +13,7 @@ const APIHost = process.env.API_HOST || 'localhost';
 export const initApollo = (): ApolloClient<any> =>
   new ApolloClient({
     link: createHttpLink({
-      uri: `https://${APIHost}/graphql`,
+      uri: `http://${APIHost}/graphql`,
       fetch,
     }),
     cache,

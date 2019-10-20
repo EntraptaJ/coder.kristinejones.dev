@@ -3,6 +3,7 @@ import { Field, ObjectType } from 'type-graphql';
 import { User } from 'API/Modules/Users/UserModel';
 import { UserRole } from '../Users/UserRole';
 import { Project } from '../Projects/ProjectModel';
+import { Idea } from '../Ideas/IdeasModel';
 
 @ObjectType()
 export class CurrentUser extends User {
@@ -14,4 +15,7 @@ export class CurrentUser extends User {
 
   @Field(() => [Project])
   projects: Promise<Project[]>;
+
+  @Field(() => [Idea])
+  ideas: Promise<Idea[]>
 }

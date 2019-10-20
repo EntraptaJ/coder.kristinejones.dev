@@ -53,7 +53,7 @@ export class CodeSessionResolver {
 
     await docker
       .getContainer(project.codeSession.containerId)
-      .remove({ force: true });
+      .remove({ force: true, v: true });
 
     project.codeSession = null;
     await project.save();

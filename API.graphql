@@ -30,12 +30,26 @@ type CurrentUser {
   email: String!
   roles: [UserRole!]!
   projects: [Project!]!
+  ideas: [Idea!]!
 }
 
 """
 The javascript `Date` as string. Type represents date and time as the ISO Date string.
 """
 scalar DateTime
+
+type Idea {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  title: String!
+  body: String
+}
+
+input IdeaInput {
+  title: String!
+  body: String
+}
 
 input LoginInput {
   username: String!
@@ -49,6 +63,7 @@ type Mutation {
   startCodingSession(projectId: String!): Project!
   finishCodingSession(projectId: String!): Project!
   initialConfiguration(user: UserInput!): Configuration!
+  createIdea(input: IdeaInput!): CurrentUser!
   createProject(input: ProjectInput!): CurrentUser!
   updateProject(input: UpdateProjectInput!, projectId: String!): Project!
   createUtility(input: CreateUtilityInput!): Utility!
@@ -84,6 +99,7 @@ input ProjectInput {
 type Query {
   currentUser: CurrentUser
   hasSetup: Boolean!
+  idea(ideaId: String!): Idea!
   project(projectId: String!): Project!
   users: [User!]!
   user(userId: String!): User!
