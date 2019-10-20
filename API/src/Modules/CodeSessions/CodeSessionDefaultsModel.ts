@@ -1,39 +1,15 @@
 // API/src/Modules/CodeSessions/CodeSessionDefaultsModel.ts
-import { Field, ID, ObjectType } from 'type-graphql';
-import {
-  BaseEntity,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-  OneToOne,
-  Column,
-  JoinColumn,
-} from 'typeorm';
+import { ObjectType } from 'type-graphql';
+import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 import { Project } from '../Projects/ProjectModel';
+import { SessionDefaults } from './SessionDefaults';
 
 @ObjectType()
 @Entity()
-export class CodeSessionDefaults extends BaseEntity {
-  @Field(() => ID)
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
-  @Field()
-  @CreateDateColumn()
-  readonly createdAt: Date;
-
-  @Field()
-  @UpdateDateColumn()
-  readonly updatedAt: Date;
-
+export class CodeSessionDefaults extends SessionDefaults {
   @OneToOne(() => Project)
   @JoinColumn()
   readonly project: Project;
   @Column()
   projectId: string;
-
-  @Field(() => [String])
-  @Column({ type: 'varchar', array: true })
-  extensions: string[];
 }

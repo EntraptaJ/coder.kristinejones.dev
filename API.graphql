@@ -38,6 +38,7 @@ type CurrentUser {
   roles: [UserRole!]!
   projects: [Project!]!
   ideas: [Idea!]!
+  userDefaults: UserDefaults
 }
 
 """
@@ -85,6 +86,7 @@ type Project {
   projectAuth: ProjectAuth
   gitUrl: String!
   codeSession: CodeSession
+  sessionDefaults: CodeSessionDefaults
 }
 
 type ProjectAuth {
@@ -128,6 +130,13 @@ input RequestPasswordResetInput {
 input ResetPasswordInput {
   token: String!
   password: String!
+}
+
+type SessionDefaults {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  extensions: [String!]!
 }
 
 input UpdateCodeSessionDefaultsInput {

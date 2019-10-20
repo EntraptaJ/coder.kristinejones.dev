@@ -14,6 +14,7 @@ import {
 } from '../Auth/AuthValidator';
 import { Project } from '../Projects/ProjectModel';
 import { Idea } from '../Ideas/IdeasModel';
+import { UserDefaults } from './UserDefaultsModel';
 
 @ObjectType()
 @Entity()
@@ -66,6 +67,10 @@ export class User extends BaseEntity {
   }
 
   get ideas(): Promise<Idea[]> {
-    return Idea.find({ userId: this.id })
+    return Idea.find({ userId: this.id });
+  }
+
+  get userDefaults(): Promise<UserDefaults | undefined> {
+    return UserDefaults.findOne({ where: { userId: this.id } });
   }
 }

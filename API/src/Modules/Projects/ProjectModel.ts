@@ -23,6 +23,7 @@ import { User } from '../Users/UserModel';
 import { Permission } from '../Permissions/Permission';
 import { ProjectAuth } from './ProjectAuthModel';
 import { CodeSession } from '../CodeSessions/CodeSessionModel';
+import { CodeSessionDefaults } from '../CodeSessions/CodeSessionDefaultsModel';
 
 @ObjectType()
 @Entity()
@@ -76,6 +77,11 @@ export class Project extends BaseEntity {
     },
   )
   permissions: ProjectPermission[];
+
+  @Field(() => CodeSessionDefaults, { nullable: true })
+  sessionDefaults(): Promise<CodeSessionDefaults | undefined> {
+    return CodeSessionDefaults.findOne({ where: { projectId: this.id } });
+  }
 
   async checkUserAuthorization(
     user: User | string,

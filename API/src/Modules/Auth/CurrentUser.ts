@@ -4,6 +4,7 @@ import { User } from 'API/Modules/Users/UserModel';
 import { UserRole } from '../Users/UserRole';
 import { Project } from '../Projects/ProjectModel';
 import { Idea } from '../Ideas/IdeasModel';
+import { UserDefaults } from '../Users/UserDefaultsModel';
 
 @ObjectType()
 export class CurrentUser extends User {
@@ -17,5 +18,8 @@ export class CurrentUser extends User {
   projects: Promise<Project[]>;
 
   @Field(() => [Idea])
-  ideas: Promise<Idea[]>
+  ideas: Promise<Idea[]>;
+
+  @Field(() => UserDefaults, { nullable: true })
+  userDefaults: Promise<UserDefaults | undefined>;
 }
