@@ -25,7 +25,7 @@ export class CodeSessionResolver {
     );
     if (project.codeSession) throw new ApolloError('EXISTING_CODE_SESSION');
 
-    const codeSession = await CodeSession.createCodingSession(project, currentUser);
+    const codeSession = await CodeSession.createCodingSession(project,  currentUser);
 
     project.codeSession = codeSession;
     await project.save();
