@@ -62,6 +62,7 @@
     "jest-cli": "^24.8.0",
     "nodemon": "^1.19.2",
     "prettier": "^1.18.2",
+    "simple-git-types": "^1.53.10",
     "ts-jest": "^24.1.0",
     "ts-node": "^8.4.1",
     "typescript": "^3.6.3"
@@ -80,7 +81,6 @@
     "pg": "^7.12.1",
     "reflect-metadata": "^0.1.13",
     "simple-git": "^1.126.0",
-    "simple-git-types": "^1.53.10",
     "tar": "^5.0.5",
     "tar-fs-fixed": "^2.0.6",
     "tempy": "^0.3.0",

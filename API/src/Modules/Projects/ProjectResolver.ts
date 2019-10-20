@@ -19,9 +19,9 @@ import { Permission } from '../Permissions/Permission';
 import { UpdateProjectInput } from './UpdateProjectInput';
 import { CodeSession } from '../CodeSessions/CodeSessionModel';
 import { UpdateProjectAuthInput } from './UpdateProjectAuthInput';
+import { CodeSessionDefaults } from '../CodeSessions/CodeSessionDefaultsModel';
+import { UpdateCodeSessionDefaultsInput } from '../CodeSessions/UpdateCodeSessionDefaultsInput';
 import { UserDefaults } from '../Users/UserDefaultsModel';
-
-// const docker = new Docker({ version: 'v1.40' });
 
 @Resolver(() => Project)
 export class ProjectResolver {
@@ -63,7 +63,7 @@ export class ProjectResolver {
   @Mutation(() => Project)
   async updateProject(
     @Arg('projectId') projectId: string,
-    @Arg('input') { auth, name }: UpdateProjectInput,
+    @Arg('input') { auth, name, sessionDefaults }: UpdateProjectInput,
     @Ctx() { currentUser }: AuthContext,
   ): Promise<Project> {
     const project = await Project.getUserProject(
@@ -86,6 +86,25 @@ export class ProjectResolver {
       }
     }
 
+    let codeSessionDefaults = await CodeSessionDefaults.findOne({
+      where: { projectId: project.id },
+    });
+    if (sessionDefaults) {
+      if (codeSessionDefaults)
+        for (const [field, value] of Object.entries(sessionDefaults) as [
+          keyof UpdateCodeSessionDefaultsInput,
+          any,
+        ][])
+          codeSessionDefaults[field] = value;
+      else {
+        codeSessionDefaults = CodeSessionDefaults.create({
+          projectId: project.id,
+          ...sessionDefaults,
+        });
+      }
+      await codeSessionDefaults.save();
+    }
+
     if (name) project.name = name;
     await project.save();
 
@@ -94,12 +113,18 @@ export class ProjectResolver {
 
   @Authorized()
   @Mutation(() => Boolean)
-  async addUserDefaults(@Arg('extensions', () => [String]) extensions: string[], @Ctx() { currentUser }: AuthContext): Promise<boolean> {
-    const userDefaults = UserDefaults.create({ userId: currentUser.id, extensions })
+  async addUserDefaults(
+    @Arg('extensions', () => [String]) extensions: string[],
+    @Ctx() { currentUser }: AuthContext,
+  ): Promise<boolean> {
+    const userDefaults = UserDefaults.create({
+      userId: currentUser.id,
+      extensions,
+    });
 
-    await userDefaults.save()
+    await userDefaults.save();
 
-    return true
+    return true;
   }
 
   @FieldResolver(() => CodeSession, { nullable: true })
@@ -113,50 +138,6 @@ export class ProjectResolver {
   projectAuth(@Root() { projectAuthId }: Project): Promise<
     ProjectAuth | undefined
   > {
-    console.log(projectAuthId);
     return ProjectAuth.findOne({ where: { id: projectAuthId } });
   }
-
-  /*   @Authorized()
-  @Mutation(() => String)
-  async codeProject(
-    @Arg('projectId') projectId: string,
-    @Ctx() { currentUser }: AuthContext,
-  ): Promise<string> {
-    const project = await Project.getUserProject(
-      projectId,
-      currentUser,
-      { relations: ['projectAuth'] },
-      Permission.ADMIN,
-    );
-
-    const tempFolder = tempy.directory();
-
-    let remote: string = project.gitUrl;
-
-
-    await git(tempFolder)
-      .silent(true)
-      .clone(remote, './');
-
-    const compress = tar.c({ cwd: tempFolder }, ['./']);
-
-    const container = await docker.createContainer({
-      Image:
-        'docker.pkg.github.com/kristianfjones/docker-images/vs-code-alpine',
-      HostConfig: {
-        NetworkMode: 'kristianjones_default',
-      },
-    });
-
-    await container.putArchive(compress, {
-      path: '/home/vs-code/Projects/',
-    });
-
-    await container.start();
-
-    const { Config } = await container.inspect();
-
-    return `${Config.Hostname}.code.kristianjones.dev`;
-  } */
 }

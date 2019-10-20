@@ -15,7 +15,7 @@ import Docker, { Network } from 'dockerode';
 import tempy from 'tempy';
 import git from 'simple-git';
 import tar from 'tar';
-import { User } from '../Users/UserModel';
+import { CodeSessionDefaults } from './CodeSessionDefaultsModel';
 import { UserDefaults } from '../Users/UserDefaultsModel';
 
 const docker = new Docker({ version: 'v1.40' });
@@ -48,7 +48,10 @@ export class CodeSession extends BaseEntity {
   @Column('varchar')
   networkId: string;
 
-  static async createCodingSession(project: Project, user: User): Promise<CodeSession> {
+  static async createCodingSession(
+    project: Project,
+    userId?: string,
+  ): Promise<CodeSession> {
     const codeSession = CodeSession.create();
     const proxyContainers = await docker.listContainers({
       limit: 1,
@@ -77,12 +80,30 @@ export class CodeSession extends BaseEntity {
 
     const compress = tar.c({ cwd: tempFolder }, ['./']);
 
-    const userDefaults = await UserDefaults.findOne({ where: { userId: user.id } });
+    const userDefaults = await UserDefaults.findOne({ where: { userId } });
 
-    const container = await docker.createContainer({ // /usr/local/bin/code-server --install-extension azemoh.theme-onedark
+    const sessionDefaults = await CodeSessionDefaults.findOne({
+      where: { projectId: project.id },
+    });
+
+    let defaults: UserDefaults | CodeSessionDefaults | undefined;
+
+    if (userDefaults && !sessionDefaults) defaults = userDefaults;
+    else defaults = sessionDefaults;
+
+    const container = await docker.createContainer({
       Image:
         'docker.pkg.github.com/kristianfjones/docker-images/vs-code-alpine',
-      Env: userDefaults ? [`EXTENSIONS=${userDefaults.extensions.map((extension) => `/usr/local/bin/code-server --install-extension ${extension} --extensions-dir=/home/vs-code/.code/extensions --user-data-dir=/home/vs-code/.code/data`).join(' && ')}`] : undefined,
+      Env: defaults
+        ? [
+            `EXTENSIONS=${defaults.extensions
+              .map(
+                (extension) =>
+                  `/usr/local/bin/code-server --install-extension ${extension} --extensions-dir=/home/vs-code/.code/extensions --user-data-dir=/home/vs-code/.code/data`,
+              )
+              .join(' && ')}`,
+          ]
+        : undefined,
       HostConfig: {
         NetworkMode: sessionNetwork.id,
         Binds: ['/var/run/docker.sock:/var/run/docker.sock'],

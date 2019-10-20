@@ -1,4 +1,6 @@
-# Application Template
+# Coder
+
+Coder is a system that creates code-server container for temporary code-server deployments.
 
 ## Usage
 

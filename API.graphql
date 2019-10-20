@@ -16,6 +16,13 @@ type CodeSession {
   networkId: String!
 }
 
+type CodeSessionDefaults {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  extensions: [String!]!
+}
+
 type Configuration {
   id: ID!
 }
@@ -123,6 +130,10 @@ input ResetPasswordInput {
   password: String!
 }
 
+input UpdateCodeSessionDefaultsInput {
+  extensions: [String!]
+}
+
 input UpdateProjectAuthInput {
   username: String
   password: String
@@ -131,6 +142,7 @@ input UpdateProjectAuthInput {
 input UpdateProjectInput {
   name: String
   auth: UpdateProjectAuthInput
+  sessionDefaults: UpdateCodeSessionDefaultsInput
 }
 
 type User {
