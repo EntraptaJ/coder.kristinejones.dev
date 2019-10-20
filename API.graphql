@@ -66,6 +66,7 @@ type Mutation {
   createIdea(input: IdeaInput!): CurrentUser!
   createProject(input: ProjectInput!): CurrentUser!
   updateProject(input: UpdateProjectInput!, projectId: String!): Project!
+  addUserDefaults(extensions: [String!]!): Boolean!
   createUtility(input: CreateUtilityInput!): Utility!
 }
 
@@ -135,6 +136,13 @@ input UpdateProjectInput {
 type User {
   id: ID!
   username: String!
+}
+
+type UserDefaults {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  extensions: [String!]!
 }
 
 input UserInput {

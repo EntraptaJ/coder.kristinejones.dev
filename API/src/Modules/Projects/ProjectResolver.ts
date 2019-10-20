@@ -19,6 +19,7 @@ import { Permission } from '../Permissions/Permission';
 import { UpdateProjectInput } from './UpdateProjectInput';
 import { CodeSession } from '../CodeSessions/CodeSessionModel';
 import { UpdateProjectAuthInput } from './UpdateProjectAuthInput';
+import { UserDefaults } from '../Users/UserDefaultsModel';
 
 // const docker = new Docker({ version: 'v1.40' });
 
@@ -89,6 +90,16 @@ export class ProjectResolver {
     await project.save();
 
     return project;
+  }
+
+  @Authorized()
+  @Mutation(() => Boolean)
+  async addUserDefaults(@Arg('extensions', () => [String]) extensions: string[], @Ctx() { currentUser }: AuthContext): Promise<boolean> {
+    const userDefaults = UserDefaults.create({ userId: currentUser.id, extensions })
+
+    await userDefaults.save()
+
+    return true
   }
 
   @FieldResolver(() => CodeSession, { nullable: true })
