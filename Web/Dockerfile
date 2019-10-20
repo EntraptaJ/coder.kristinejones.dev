@@ -1,4 +1,4 @@
-FROM mhart/alpine-node:latest
+FROM mhart/alpine-node:12
 WORKDIR /app
 COPY package.json package-lock.json tsconfig.json .babelrc ./
 RUN npm install
@@ -9,7 +9,7 @@ COPY ./types/ ./types/
 COPY ./Icons/ ./Icons/
 RUN NODE_ENV=production npm run build
 
-FROM mhart/alpine-node:latest
+FROM mhart/alpine-node:12
 WORKDIR /app
 ENV NODE_ENV=production
 COPY package.json package-lock.json ./

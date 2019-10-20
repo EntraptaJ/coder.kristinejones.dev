@@ -47,8 +47,7 @@ export class CodeSession extends BaseEntity {
   networkId: string;
 
   static async createCodingSession(project: Project): Promise<CodeSession> {
-    const codeSession = this.create();
-
+    const codeSession = CodeSession.create();
     const proxyContainers = await docker.listContainers({
       limit: 1,
       filters: '{"label": ["com.coder.proxy=true"]}',
@@ -59,7 +58,6 @@ export class CodeSession extends BaseEntity {
     const sessionNetwork: Network = await docker.createNetwork({
       Name: `${project.id}-network`,
     });
-    await sessionNetwork.connect({ Container: proxyContainer.Id });
     codeSession.networkId = sessionNetwork.id;
 
     const tempFolder = tempy.directory();
@@ -90,10 +88,13 @@ export class CodeSession extends BaseEntity {
       path: '/home/vs-code/Projects/',
     });
     await container.start();
-
     const { Config } = await container.inspect();
-
     codeSession.containerId = Config.Hostname;
+
+    setTimeout(
+      () => sessionNetwork.connect({ Container: proxyContainer.Id }),
+      700,
+    );
 
     return codeSession;
   }
@@ -109,8 +110,10 @@ export class CodeSession extends BaseEntity {
 
     const sessionNetwork = await docker.getNetwork(this.networkId);
 
-    await sessionNetwork.disconnect({ Container: proxyContainer.Id });
+    setTimeout(async () => {
+      await sessionNetwork.disconnect({ Container: proxyContainer.Id });
 
-    await sessionNetwork.remove();
+      await sessionNetwork.remove();
+    }, 700);
   }
 }
