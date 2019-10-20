@@ -1,0 +1,85 @@
+{
+  "apps": {
+    "http": {
+      "servers": {
+        "coder": {
+          "listen": [":80"],
+          "routes": [
+            {
+              "handle": [
+                {
+                  "handler": "subroute",
+                  "routes": [
+                    {
+                      "handle": [
+                        {
+                          "handler": "vars",
+                          "root": "/var/www/html"
+                        },
+                        {
+                          "handler": "subroute",
+                          "routes": [
+                            {
+                              "handle": [
+                                {
+                                  "handler": "headers",
+                                  "response": {
+                                    "add": {
+                                      "Alt-Svc": ["h3-23=\":443\"; sma=86400"]
+                                    },
+                                    "deferred": true
+                                  }
+                                }
+                              ]
+                            },
+                            {
+                              "handle": [
+                                {
+                                  "handler": "reverse_proxy",
+                                  "upstreams": [
+                                    {
+                                      "dial": "api:80"
+                                    }
+                                  ]
+                                }
+                              ],
+                              "match": [
+                                {
+                                  "path": ["/graphql"]
+                                }
+                              ]
+                            },
+                            {
+                              "handle": [
+                                {
+                                  "handler": "reverse_proxy",
+                                  "upstreams": [
+                                    {
+                                      "dial": "ui:81"
+                                    }
+                                  ]
+                                }
+                              ],
+                              "match": [
+                                {
+                                  "path": ["/"]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "automatic_https":{
+						"disable": true
+					}
+        }
+      }
+    }
+  }
+}
