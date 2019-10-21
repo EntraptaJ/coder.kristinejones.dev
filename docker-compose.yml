@@ -1,0 +1,77 @@
+version: '3.7'
+services:
+  web:
+    build: './ReverseProxy'
+    image: 'webreverseproxy'
+    command: ['run', '--config', '/etc/caddy/Caddyfile.json']
+
+  api:
+    build:
+      context: './API'
+      dockerfile: 'Dockerfile.dev'
+    image: 'applicationtemplate-api'
+    working_dir: /lab/API
+    environment:
+      DB_HOST: database
+      DB_PASSWORD: pgpass
+      NODE_ENV: production
+    volumes:
+      - coder:/lab
+      - /var/run/docker.sock:/var/run/docker.sock
+  database:
+    image: postgres:11-alpine
+    environment:
+      POSTGRES_PASSWORD: pgpass
+      POSTGRES_DB: application
+    volumes:
+      - databaseData:/var/lib/postgresql/data
+  ui:
+    build:
+      context: './Web'
+      dockerfile: 'Dockerfile.dev'
+    image: 'applicationtemplate-ui'
+    working_dir: /lab/Web
+    environment:
+      API_HOST: api
+      PUBLIC_URL: https://cetera.tunnel.kristianjones.dev
+    volumes:
+      - coder:/lab
+  web-gen:
+    build:
+      context: './Scripts/GraphQLCodegen'
+      dockerfile: 'Dockerfile'
+    image: 'applicationtemplate-gen'
+    environment:
+      - DATA_PATH=/data/Web/
+    volumes:
+      - coder:/data
+
+  serveo:
+    image: taichunmin/serveo:latest
+    command: >
+      autossh -M 0
+      -o ServerAliveInterval=60
+      -o ServerAliveCountMax=3
+      -o ExitOnForwardFailure=yes
+      -o StrictHostKeyChecking=no
+      -R 80:web:80
+      -p 2222
+      tunnel.kristianjones.dev
+
+  serveo-hmr:
+    image: taichunmin/serveo:latest
+    command: >
+      autossh -M 0
+      -o ServerAliveInterval=60
+      -o ServerAliveCountMax=3
+      -o ExitOnForwardFailure=yes
+      -o StrictHostKeyChecking=no
+      -R 80:ui:443
+      -p 2222
+      tunnel.kristianjones.dev
+
+volumes:
+  databaseData:
+  coder: 
+    external:
+      name: 4d6117538f0055e62fbf59084bd13ca621946ab22e20fe6c7c074262d7fef694
