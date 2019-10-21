@@ -72,6 +72,7 @@ type Mutation {
   finishCodingSession(projectId: String!): Project!
   initialConfiguration(user: UserInput!): Configuration!
   createIdea(input: IdeaInput!): CurrentUser!
+  deleteIdea(ideaId: String!): CurrentUser!
   createProject(input: ProjectInput!): CurrentUser!
   updateProject(input: UpdateProjectInput!, projectId: String!): Project!
   addUserDefaults(extensions: [String!]!): Boolean!

@@ -82,6 +82,7 @@ export type Mutation = {
   finishCodingSession: Project,
   initialConfiguration: Configuration,
   createIdea: CurrentUser,
+  deleteIdea: CurrentUser,
   createProject: CurrentUser,
   updateProject: Project,
   addUserDefaults: Scalars['Boolean'],
@@ -121,6 +122,11 @@ export type MutationInitialConfigurationArgs = {
 
 export type MutationCreateIdeaArgs = {
   input: IdeaInput
+};
+
+
+export type MutationDeleteIdeaArgs = {
+  ideaId: Scalars['String']
 };
 
 

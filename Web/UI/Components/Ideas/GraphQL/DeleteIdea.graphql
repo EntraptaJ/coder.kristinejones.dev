@@ -1,0 +1,12 @@
+mutation DeleteIdea($ideaId: String!) {
+    deleteIdea(ideaId: $ideaId) {
+        id
+        username
+
+        ideas {
+            id
+            title
+            body
+        }
+    }
+}
