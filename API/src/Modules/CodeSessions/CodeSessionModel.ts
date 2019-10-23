@@ -91,23 +91,26 @@ export class CodeSession extends BaseEntity {
     if (userDefaults && !sessionDefaults) defaults = userDefaults;
     else defaults = sessionDefaults;
 
+    const extensionENV = defaults
+      ? defaults.extensions
+          .map(
+            (extension) =>
+              `/usr/local/bin/code-server --install-extension ${extension} --extensions-dir=/home/vs-code/.code/extensions --user-data-dir=/home/vs-code/.code/data`,
+          )
+          .join(' && ')
+      : ``;
+    
     const container = await docker.createContainer({
       Image:
-        'docker.pkg.github.com/kristianfjones/docker-images/vs-code-alpine',
-      Env: defaults
-        ? [
-            `EXTENSIONS=${defaults.extensions
-              .map(
-                (extension) =>
-                  `/usr/local/bin/code-server --install-extension ${extension} --extensions-dir=/home/vs-code/.code/extensions --user-data-dir=/home/vs-code/.code/data`,
-              )
-              .join(' && ')}`,
-          ]
-        : undefined,
+        'docker.pkg.github.com/kristianfjones/docker-images/vs-code',
+      Env: [`EXTENSIONS=${extensionENV}`, `PROJECT_ID=${project.id}`],
       HostConfig: {
         NetworkMode: sessionNetwork.id,
         Binds: ['/var/run/docker.sock:/var/run/docker.sock'],
       },
+      Labels: {
+        'com.coder.project': project.id
+      }
     });
 
     await container.putArchive(compress, {
@@ -123,6 +126,12 @@ export class CodeSession extends BaseEntity {
     );
 
     return codeSession;
+  }
+
+  async removeProjectContainers(projectId: string): Promise<void> {
+    const projectContainers = await docker.listContainers({ filters: `{"label": ["com.coder.project=${projectId}"]}` })
+    console.log(projectContainers)
+
   }
 
   @AfterRemove()

@@ -57,6 +57,8 @@ export class CodeSessionResolver {
     await docker
       .getContainer(project.codeSession.containerId)
       .remove({ force: true, v: true });
+    
+    await codeSession.removeProjectContainers(project.id)
 
     project.codeSession = null;
     await project.save();
