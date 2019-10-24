@@ -7,6 +7,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
+      - name: LS
+        run: ls
+      - name: Dump Docker Version
+        run: ls Web/
       - uses: KristianFJones/npm-run-action@alternative
         with:
           scriptName: 'prettier'
