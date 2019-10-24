@@ -4,13 +4,16 @@ services:
     build: './ReverseProxy'
     image: 'webreverseproxy'
     command: ['run', '--config', '/etc/caddy/Caddyfile.json']
-
+    networks:
+      - core
   api:
     build:
       context: './API'
       dockerfile: 'Dockerfile.dev'
     image: 'applicationtemplate-api'
     working_dir: /lab/API
+    networks:
+      - core
     environment:
       DB_HOST: database
       DB_PASSWORD: pgpass
@@ -20,6 +23,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
   database:
     image: postgres:11-alpine
+    networks:
+      - core
     environment:
       POSTGRES_PASSWORD: pgpass
       POSTGRES_DB: application
@@ -30,16 +35,20 @@ services:
       context: './Web'
       dockerfile: 'Dockerfile.dev'
     image: 'applicationtemplate-ui'
+    networks:
+      - core
     working_dir: /lab/Web
     environment:
       API_HOST: api
-      PUBLIC_URL: https://cetera.tunnel.kristianjones.dev
+      PUBLIC_URL: https://expers.tunnel.kristianjones.dev
     volumes:
       - coder:/lab
   web-gen:
     build:
       context: './Scripts/GraphQLCodegen'
       dockerfile: 'Dockerfile'
+    networks:
+      - core
     image: 'applicationtemplate-gen'
     environment:
       - DATA_PATH=/data/Web/
@@ -48,11 +57,12 @@ services:
 
   serveo:
     image: taichunmin/serveo:latest
+    networks:
+      - core
     command: >
       autossh -M 0
       -o ServerAliveInterval=60
       -o ServerAliveCountMax=3
-      -o ExitOnForwardFailure=yes
       -o StrictHostKeyChecking=no
       -R 80:web:80
       -p 2222
@@ -60,18 +70,24 @@ services:
 
   serveo-hmr:
     image: taichunmin/serveo:latest
+    networks:
+      - core
     command: >
       autossh -M 0
       -o ServerAliveInterval=60
       -o ServerAliveCountMax=3
-      -o ExitOnForwardFailure=yes
       -o StrictHostKeyChecking=no
       -R 80:ui:443
       -p 2222
       tunnel.kristianjones.dev
 
+networks:
+  core:
+    external:
+      name: 485461f4-c79e-48d1-bcc6-47bf091d0cb1-network
+
 volumes:
   databaseData:
   coder: 
     external:
-      name: 4d6117538f0055e62fbf59084bd13ca621946ab22e20fe6c7c074262d7fef694
+      name: a6b5b87293b02cd5111f9a8b41205769ed7219b9edefc6334f8b2f8cbf567a38

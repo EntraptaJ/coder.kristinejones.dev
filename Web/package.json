@@ -105,6 +105,7 @@
     "clear-module": "^4.0.0",
     "clsx": "^1.0.4",
     "date-fns": "^2.5.1",
+    "decache": "^4.5.1",
     "fs-extra": "^8.1.0",
     "graphql": "^14.5.8",
     "graphql-tag": "^2.10.1",
@@ -125,6 +126,7 @@
     "sharp": "^0.23.1",
     "to-ico": "^1.1.5",
     "ts-optchain": "^0.1.8",
+    "ui": "^0.2.4",
     "universal-cookie-koa": "^4.0.1"
   },
   "devDependencies": {
@@ -167,7 +169,7 @@
     "eslint-plugin-react": "^7.14.3",
     "eslint-plugin-react-hooks": "^2.1.0",
     "eslint-plugin-standard": "^4.0.1",
-    "parcel-bundler": "^1.12.3",
+    "parcel-bundler": "^1.12.4",
     "parcel-plugin-assets-list": "^1.7.1",
     "parcel-plugin-bundle-manifest": "^0.2.0",
     "parcel-plugin-compress": "^1.0.10",

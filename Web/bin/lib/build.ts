@@ -21,9 +21,8 @@ export const build = async (watch = false): Promise<void> => {
     contentHash: true,
     sourceMaps: false,
     cache: false,
-    hmrHostname: 'expers.tunnel.kristianjones.dev',
-    hmrPort: 443,
-    https: false,
+    hmrHostname: 'cetera.tunnel.kristianjones.dev',
+    hmrPort: 443
   });
 
   await bundler.bundle();
