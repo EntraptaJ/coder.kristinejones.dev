@@ -33,9 +33,8 @@ jobs:
         uses: KristianFJones/Publish-Docker-Github-Action@master
         with:
           dockerfile: Web/Dockerfile
-          name: docker.pkg.github.com/kristianfjones/coder.kristianjones.dev/coder.kristianjones.dev-ui
+          name: docker.pkg.github.com/kristianfjones/coder.kristianjones.dev/coder.kristianjones.dev-ui:ui
           username: ${{ secrets.DOCKER_GITHUB_USERNAME }}
           password: ${{ secrets.DOCKER_GITHUB_PASSWORD }}
           registry: docker.pkg.github.com
           path: Web
-          cache: true
