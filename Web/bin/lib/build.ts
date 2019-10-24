@@ -22,7 +22,7 @@ export const build = async (watch = false): Promise<void> => {
     sourceMaps: false,
     cache: false,
     hmrHostname: 'cetera.tunnel.kristianjones.dev',
-    hmrPort: 443
+    hmrPort: 443,
   });
 
   await bundler.bundle();
